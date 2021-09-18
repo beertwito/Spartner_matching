@@ -22,49 +22,55 @@
     // be'er was here!
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
     import { getFirestore, collection, getDocs, addDoc, query, where } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
-    // web app's Firebase configuration
-    var firebaseConfig = {
-        apiKey: "AIzaSyAywIdDnnW2oSosheG6aYhdMVmGGpa5zHQ",
-        authDomain: "ascola-nike-spartner.firebaseapp.com",
-        databaseURL: "https://ascola-nike-spartner-default-rtdb.firebaseio.com",
-        projectId: "ascola-nike-spartner",
-        storageBucket: "ascola-nike-spartner.appspot.com",
-        messagingSenderId: "760534753646",
-        appId: "1:760534753646:web:995efaa259584c9ea1617f",
-        measurementId: "G-BS3664FSCB"
-    };
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    async function get_from_firebase() {
 
-    //get users docs list
-    const users_ref = collection(db, 'users')
-    const users_snapshot = await getDocs(users_ref)
-    const usersList = users_snapshot.docs.map(doc => doc.data())
-    console.log(usersList)
+        // web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyAywIdDnnW2oSosheG6aYhdMVmGGpa5zHQ",
+            authDomain: "ascola-nike-spartner.firebaseapp.com",
+            databaseURL: "https://ascola-nike-spartner-default-rtdb.firebaseio.com",
+            projectId: "ascola-nike-spartner",
+            storageBucket: "ascola-nike-spartner.appspot.com",
+            messagingSenderId: "760534753646",
+            appId: "1:760534753646:web:995efaa259584c9ea1617f",
+            measurementId: "G-BS3664FSCB"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    //query data with condition
-    const q = query(collection(db, "users"), where("age", "==", 22));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
-});
+        //get users docs list
+        const users_ref = collection(db, 'users')
+        const users_snapshot = await getDocs(users_ref)
+        const usersList = users_snapshot.docs.map(doc => doc.data())
+        console.log(usersList)
+        document.getElementById("get_from_firebase").innerHTML = usersList
 
-    //add docs
-    try {
-      const docRef = await addDoc(collection(db, "users"), {
-        name: "noam",
-        age: 23,
-        sport: "ruling"
-      });
+        //query data with condition
+        const q = query(collection(db, "users"), where("age", "==", 22));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+    });
 
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
+        //add docs
+        try {
+          const docRef = await addDoc(collection(db, "users"), {
+            name: "noam",
+            age: 23,
+            sport: "ruling"
+          });
+
+          console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
     }
     </script>
 
+<p id="get_from_firebase">get_from_firebase</p>
+<button type="button" onclick={async() => {await this.asyncFunc('get_from_firebase()');} }>Try it</button>
 
 </body>
 </html>
